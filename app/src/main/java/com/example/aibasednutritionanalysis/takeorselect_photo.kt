@@ -2,6 +2,10 @@ package com.example.aibasednutritionanalysis
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -17,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -26,10 +31,14 @@ class takeorselect_photo : AppCompatActivity() {
     private val OPEN_GALLERY = 1
     private val REQUEST_IMAGE_CAPTURE: Int = 100
     private var currentPhotoPath: String = ""
+    companion object{
+        lateinit var bitmap:Bitmap
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_takeorselect_photo)
+        val photobox:ImageView=findViewById(R.id.img_picture)
         val select_photo: Button = findViewById(R.id.select_photo)
         val take_photo: Button = findViewById(R.id.take_photo)
         val end = findViewById<Button>(R.id.button3)
@@ -47,8 +56,13 @@ class takeorselect_photo : AppCompatActivity() {
             startCapture()
         }
 
+        photobox.setOnClickListener{
+            Toast.makeText(this, "사진을 등록해주세요", Toast.LENGTH_LONG).show()
+        }
+
         end.setOnClickListener {
-            val nextIntent = Intent(this, diet_record::class.java)
+            end.setBackgroundColor(Color.parseColor("#66CCFF"))
+            val nextIntent = Intent(this, result::class.java)
             startActivity(nextIntent)
         }
     }
@@ -74,7 +88,6 @@ class takeorselect_photo : AppCompatActivity() {
                 .setDeniedMessage("카메라 권한 요청 거부")
                 .setPermissions(
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                android.Manifest.permission.READ_EXTERNAL_STORAGE,
                         android.Manifest.permission.CAMERA)
                 .check()
     }
@@ -126,12 +139,12 @@ class takeorselect_photo : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val file = File(currentPhotoPath)
             if (Build.VERSION.SDK_INT < 28) {
-                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, Uri.fromFile(file))
+                bitmap = MediaStore.Images.Media.getBitmap(contentResolver, Uri.fromFile(file))
                 img_picture.setImageBitmap(bitmap)
             } else {
                 val decode = ImageDecoder.createSource(this.contentResolver,
                         Uri.fromFile(file))
-                val bitmap = ImageDecoder.decodeBitmap(decode)
+                bitmap = ImageDecoder.decodeBitmap(decode)
                 img_picture.setImageBitmap(bitmap)
             }
         }
@@ -139,7 +152,7 @@ class takeorselect_photo : AppCompatActivity() {
             if (requestCode == OPEN_GALLERY) {
                 var currentImageUrl: Uri? = data?.data
                 try {
-                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, currentImageUrl)
+                    bitmap = MediaStore.Images.Media.getBitmap(contentResolver, currentImageUrl)
                     img_picture.setImageBitmap(bitmap)
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -149,32 +162,4 @@ class takeorselect_photo : AppCompatActivity() {
             Log.d("ActivityResult", "something wrong")
         }
     }
-
-//    // 사진 파일을 만드는 메소드
-//    @Throws(IOException::class)
-//    private fun createImageFile(): File {
-//        // Create an image file name
-//        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-//        val storageDir: File? = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-//        return File.createTempFile(
-//                "JPEG_${timeStamp}_", /* prefix */
-//                ".jpg", /* suffix */
-//                storageDir /* directory */
-//        ).apply {
-//            // Save a file: path for use with ACTION_VIEW intents
-//            currentPhotoPath = absolutePath
-//            Log.d("test", "currentPhotoPath : $currentPhotoPath")
-//        }
-//    }
-//
-//    private fun galleryAddPic() {
-//        Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also { mediaScanIntent ->
-//            Log.d("test", "currentPhotoPath2 : $currentPhotoPath")
-//            val f = File(currentPhotoPath)
-//            mediaScanIntent.data = Uri.fromFile(f)
-//            sendBroadcast(mediaScanIntent)
-//        }
-//    }
-
-
 }

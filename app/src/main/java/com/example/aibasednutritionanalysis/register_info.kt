@@ -1,8 +1,11 @@
 package com.example.aibasednutritionanalysis
 
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 
 class register_info:AppCompatActivity() {
@@ -15,6 +18,7 @@ class register_info:AppCompatActivity() {
         var birthday: String = ""
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_info)
@@ -43,24 +47,24 @@ class register_info:AppCompatActivity() {
         //버튼(완료) 누르는 이벤트가 발생할 때
         button.setOnClickListener {
             //입력한 이름, 휴대폰 번호, 생일 값 변수에 저장
-            //성별 변수는 위쪽에 이미 저장 하였으므로 여기서는 저장하지 않음
             name = name_text.text.toString()
             phone = phone_text.text.toString()
             birthday = birthday_text.year.toString() + (birthday_text.month + 1).toString() + birthday_text.dayOfMonth.toString()
 
-            //다음 액티비티로 넘어감
-            val nextIntent = Intent(this, takeorselect_photo::class.java)
-            startActivity(nextIntent)
+            //prefs에 회원정보 저장
+            myapp.prefs.setString("NameKey",name)
+            myapp.prefs.setString("PhoneKey", phone)
+            myapp.prefs.setString("SexKey", sex)
+            myapp.prefs.setString("BirthdayKey", birthday)
+
+            if (name.length > 1 && phone.length >= 10 && sex.length == 1) {
+                button.setBackgroundColor(Color.parseColor("#66CCFF"))
+                //다음 액티비티로 넘어감
+                val nextIntent = Intent(this, takeorselect_photo::class.java)
+                startActivity(nextIntent)
+            } else {
+                Toast.makeText(this, "정보를 모두 입력해주세요", Toast.LENGTH_LONG).show()
+            }
         }
     }
-    //    @RequiresApi(Build.VERSION_CODES.N)
-    //    private fun showDatePicker(birthday_text: TextView) {
-    //        val cal = Calendar.getInstance()
-    //        DatePickerDialog(this, DatePickerDialog.OnDateSetListener(){
-    //            datepicker, y, m, d ->
-    //            Toast.makeText(this, "$y-$m-$d", Toast.LENGTH_SHORT).show()
-    //        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE)).show()
-    //
-    //        birthday = cal.get(Calendar.YEAR).toString() + (cal.get(Calendar.MONTH)+1).toString() + cal.get(Calendar.DATE).toString()
-    //        birthday_text.setText(cal.get(Calendar.YEAR).toString()+"년 "+(cal.get(Calendar.MONTH)+1).toString()+"월 "+cal.get(Calendar.DATE).toString()+"일")
 }

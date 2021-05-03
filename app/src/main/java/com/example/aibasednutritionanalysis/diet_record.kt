@@ -2,6 +2,7 @@ package com.example.aibasednutritionanalysis
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -13,15 +14,15 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.content.FileProvider
-import androidx.core.view.get
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.concurrent.timer as timer1
 
 class diet_record : AppCompatActivity() {
     val items = arrayOf("식사시간", "아침","점심","저녁","간식") //스피너(드롭다운) 배열 선언
+    private var count = 0
+    private var save = 0
     private val OPEN_GALLERY = 1
     private val REQUEST_IMAGE_CAPTURE: Int = 100
     private var currentPhotoPath: String = ""
@@ -76,11 +77,13 @@ class diet_record : AppCompatActivity() {
 
         //앨범 버튼 선택시
         album.setOnClickListener {
+            save=0
             openGallery() //갤러리 열기
             isempty(textbox, end, spinner) //작성완료 버튼 활성화할지 비활성화할지 정함
         }
         //카메라 버튼 선택시
         camera.setOnClickListener {
+            save=0
             startCapture() //카메라 열기
             isempty(textbox, end, spinner) //작성완료 버튼 활성화할지 비활성화할지 정함
         }
@@ -112,11 +115,11 @@ class diet_record : AppCompatActivity() {
     //식사시간 선택이 안된 경우, 본문에 글이 작성되지 않은 경우 작성완료 버튼 보이지 않음
     private fun isempty(textbox: EditText, end:Button, spinner:Spinner){
         if(spinner.selectedItem.toString()==items[0] && textbox.text.isNullOrEmpty()) {
-            end.visibility=View.INVISIBLE
             end.isClickable=false
         }
         else{
-            end.visibility=View.VISIBLE
+            end.isClickable=true
+            end.setBackgroundColor(Color.parseColor("#66CCFF"))
         }
     }
 
@@ -164,18 +167,32 @@ class diet_record : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val img_picture = findViewById<ImageView>(R.id.imageView)
+        val img_picture:ImageView
+        val img_picture1 = findViewById<ImageView>(R.id.photo1)
+        val img_picture2 = findViewById<ImageView>(R.id.photo2)
+        val img_picture3 = findViewById<ImageView>(R.id.photo3)
+
+        if(count==0) img_picture=img_picture1
+        else if(count==1) img_picture=img_picture2
+        else if(count==2) img_picture=img_picture3
+        else {
+            Toast.makeText(this,"사진은 최대 3장까지 등록 가능합니다.",Toast.LENGTH_LONG).show()
+            return
+        }
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val file = File(currentPhotoPath)
             if (Build.VERSION.SDK_INT < 28) {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, Uri.fromFile(file))
                 img_picture.setImageBitmap(bitmap)
+                save=1
             } else {
                 val decode = ImageDecoder.createSource(this.contentResolver,
                         Uri.fromFile(file))
                 val bitmap = ImageDecoder.decodeBitmap(decode)
+
                 img_picture.setImageBitmap(bitmap)
+                save=1
             }
         }
         if (resultCode == Activity.RESULT_OK) {
@@ -184,12 +201,15 @@ class diet_record : AppCompatActivity() {
                 try {
                     val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, currentImageUrl)
                     img_picture.setImageBitmap(bitmap)
+                    save=1
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
-        } else {
+        }
+        else {
             Log.d("ActivityResult", "something wrong")
         }
+        if(save==1) count++
     }
 }

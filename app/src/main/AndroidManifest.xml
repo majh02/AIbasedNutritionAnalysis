@@ -12,9 +12,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_aina"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/launcher_aina"
         android:supportsRtl="true"
         android:theme="@style/Theme.AIbasedNutritionAnalysis">
         <activity android:name=".MainActivity">
@@ -30,6 +30,9 @@
         <activity
             android:label="activity_takeorselect_photo"
             android:name=".takeorselect_photo"></activity>
+        <activity
+            android:label="activity_result"
+            android:name=".result"></activity>
         <activity
             android:label="activity_diet_record"
             android:name=".diet_record"></activity>

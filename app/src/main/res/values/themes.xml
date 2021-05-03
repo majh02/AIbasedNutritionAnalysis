@@ -17,7 +17,8 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="myDatePickerStyle" parent="android:Widget.Material.DatePicker">
-        <item name="android:datePickerMode">spinner</item>
-    </style>
+<!--    <style name="myDatePickerStyle" parent="android:Widget.Material.DatePicker">-->
+<!--        <item name="android:datePickerMode">spinner</item>-->
+<!--    </style>-->
+
 </resources>
