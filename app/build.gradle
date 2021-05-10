@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -42,7 +43,16 @@ dependencies {
     implementation 'gun0912.ted:tedpermission:2.2.3'
     implementation 'gun0912.ted:tedpermission:2.0.0'
     implementation 'androidx.core:core-ktx:1.0.0-alpha1'
+    implementation 'androidx.room:room-runtime:2.2.5'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+//    DB 관련 dependencies
+    def room_version = "2.2.5"
+
+    // Room DB
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
 }

@@ -32,7 +32,7 @@ class takeorselect_photo : AppCompatActivity() {
     private val REQUEST_IMAGE_CAPTURE: Int = 100
     private var currentPhotoPath: String = ""
     companion object{
-        lateinit var bitmap:Bitmap
+        var bitmap: Bitmap? =null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,13 +42,6 @@ class takeorselect_photo : AppCompatActivity() {
         val select_photo: Button = findViewById(R.id.select_photo)
         val take_photo: Button = findViewById(R.id.take_photo)
         val end = findViewById<Button>(R.id.button3)
-
-        //이름, 성별, 휴대폰 번호, 생일 변수값 잘 전달 받았는지 확인
-        var name:String=register_info.name
-        var sex:String=register_info.sex
-        var phone:String=register_info.phone
-        var birthday:String=register_info.birthday
-        println("activity_takeorselect_photo : "+name+","+sex+","+phone+","+birthday)
 
         settingPermission()
         select_photo.setOnClickListener { openGallery() }
@@ -61,9 +54,14 @@ class takeorselect_photo : AppCompatActivity() {
         }
 
         end.setOnClickListener {
-            end.setBackgroundColor(Color.parseColor("#66CCFF"))
-            val nextIntent = Intent(this, result::class.java)
-            startActivity(nextIntent)
+            if(bitmap==null) {
+                Toast.makeText(this, "사진을 등록해주세요", Toast.LENGTH_LONG).show()
+            }
+            else {
+                end.setBackgroundColor(Color.parseColor("#66CCFF"))
+                val nextIntent = Intent(this, result::class.java)
+                startActivity(nextIntent)
+            }
         }
     }
 

@@ -1,45 +1,79 @@
 package com.example.aibasednutritionanalysis
 
 import android.content.Intent
+import android.content.res.AssetManager
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
 import com.example.aibasednutritionanalysis.myapp.Companion.prefs
 import com.example.aibasednutritionanalysis.register_info.Companion.birthday
 import com.example.aibasednutritionanalysis.register_info.Companion.name
 import com.example.aibasednutritionanalysis.register_info.Companion.phone
 import com.example.aibasednutritionanalysis.register_info.Companion.sex
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.InputStream
+
 
 class MainActivity : AppCompatActivity() {
+    companion object{
+        lateinit var NutritionDB:nutritionDB
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val logo = findViewById<ImageView>(R.id.mainlogo)
 
+        //Room DataBase
+        NutritionDB = Room.databaseBuilder(this, nutritionDB::class.java,"db").allowMainThreadQueries().build()
+        NutritionDB.nutritionDao().deleteAll()
+
+        val assetManager: AssetManager = resources.assets
+        val inputStream: InputStream = assetManager.open("NutritionDB.txt")
+
+        inputStream.bufferedReader().readLines().forEach {
+            var token = it.split("\t")
+            var input = nutrition(token[0].toInt(), token[1], token[2].toInt(), token[3].toDouble(), token[4].toDouble(),
+                token[5].toDouble(), token[6].toDouble(),token[7].toDouble(),token[8].toDouble(),token[9].toDouble())
+            CoroutineScope(Dispatchers.Main).launch {
+                NutritionDB?.nutritionDao()?.insert(input)
+            }
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            var output = NutritionDB.nutritionDao().getAll()
+            Log.d("db_test", "$output")
+        }
+
+
         //prefs(SharedPreferences) -> 회원정보 저장함
         prefs= MySharedPreferences(applicationContext)
 
-        name= prefs.getString("NameKey","")
-        phone=prefs.getString("PhoneKey","")
-        sex=prefs.getString("SexKey","")
-        birthday=prefs.getString("BirthdayKey","")
+        name= prefs.getString("NameKey", "")
+        phone=prefs.getString("PhoneKey", "")
+        sex=prefs.getString("SexKey", "")
+        birthday=prefs.getString("BirthdayKey", "")
 
-        println("MAIN : "+name+","+sex+","+phone+","+birthday)
+        println("MAIN : " + name + "," + sex + "," + phone + "," + birthday)
 
         Handler().postDelayed({
-            logo.visibility= View.INVISIBLE //로고 사라짐
+            logo.visibility = View.INVISIBLE //로고 사라짐
             //이전에 이미 회원정보를 입력했다면 takeorselect_photo 페이지로 감
-            if (register_info.name.length > 1 && register_info.phone.length >= 10 && register_info.sex.length == 1){
+            if (register_info.name.length > 1 && register_info.phone.length >= 10 && register_info.sex.length == 1) {
                 val nextIntent = Intent(this, takeorselect_photo::class.java)
                 startActivity(nextIntent)
             }
             //입력된 회원정보가 없는 경우(처음 어플 설치한 경우), register_info 페이지로 감
-            else{
+            else {
                 val nextIntent = Intent(this, register_info::class.java)
                 startActivity(nextIntent)
             }
-        },3000) //3초 후 위의 코드를 실행함
+        }, 3000) //3초 후 위의 코드를 실행함
     }
 }
