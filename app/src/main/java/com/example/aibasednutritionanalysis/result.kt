@@ -41,11 +41,12 @@ class result: AppCompatActivity() {
                 +"  단백질\n"+"  지방\n" +"  식이섬유\n"+"  나트륨")
         result2.setText(one_time +"g  \n" +energy+"kcal  \n" +carb+"g  \n"+sugar+"g  \n"
                 +protein+"g  \n"+fat+"g  \n"+fiber+"g  \n"+sodium+"mg  ")
+    }
 
-        //임시로 넣은 코드-> 나중에 수정할것임
-        Handler().postDelayed({
-            val nextIntent = Intent(this, diet_record::class.java)
-            startActivity(nextIntent)
-        },10000) //10초 후 위의 코드를 실행함
+    //백버튼 누르면 메뉴화면으로 이동
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val nextIntent = Intent(this, menu::class.java)
+        startActivity(nextIntent)
     }
 }

@@ -28,6 +28,9 @@
             android:label="activity_register_info"
             android:name=".register_info"></activity>
         <activity
+            android:label="activity_menu"
+            android:name=".menu"></activity>
+        <activity
             android:label="activity_takeorselect_photo"
             android:name=".takeorselect_photo"></activity>
         <activity

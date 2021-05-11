@@ -3,8 +3,6 @@ package com.example.aibasednutritionanalysis
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Bitmap.CompressFormat
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -21,7 +19,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -159,5 +156,12 @@ class takeorselect_photo : AppCompatActivity() {
         } else {
             Log.d("ActivityResult", "something wrong")
         }
+    }
+
+    //백버튼 누르면 메뉴화면으로 이동
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val nextIntent = Intent(this, menu::class.java)
+        startActivity(nextIntent)
     }
 }

@@ -29,6 +29,25 @@ class register_info:AppCompatActivity() {
         val birthday_text: DatePicker = findViewById(R.id.dpSpinner)
         val button: Button = findViewById(R.id.button2)
 
+        //prefs(SharedPreferences) -> 회원정보 저장함
+        myapp.prefs = MySharedPreferences(applicationContext)
+
+        name= myapp.prefs.getString("NameKey", "")
+        phone= myapp.prefs.getString("PhoneKey", "")
+        sex= myapp.prefs.getString("SexKey", "")
+        birthday= myapp.prefs.getString("BirthdayKey", "")
+
+        name_text.setText(name)
+        phone_text.setText(phone)
+        var id:Int=0
+        if(sex=="여") id=1
+        sex_group.check(id)
+        if(birthday.isNullOrBlank()){
+            birthday_text.isClickable=false
+            Toast.makeText(this, "생년월일 수정은 불가합니다.", Toast.LENGTH_LONG).show()
+        }
+
+
         //성별 라디오 버튼 그룹: sex_group
         sex_group.setOnCheckedChangeListener(object :
                 RadioGroup.OnCheckedChangeListener { //라디오 버튼 체크가 바뀌는 이벤트가 일어나면
@@ -60,11 +79,18 @@ class register_info:AppCompatActivity() {
             if (name.length > 1 && phone.length >= 10 && sex.length == 1) {
                 button.setBackgroundColor(Color.parseColor("#66CCFF"))
                 //다음 액티비티로 넘어감
-                val nextIntent = Intent(this, takeorselect_photo::class.java)
+                val nextIntent = Intent(this, menu::class.java)
                 startActivity(nextIntent)
             } else {
                 Toast.makeText(this, "정보를 모두 입력해주세요", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    //백버튼 누르면 메뉴화면으로 이동
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val nextIntent = Intent(this, menu::class.java)
+        startActivity(nextIntent)
     }
 }
