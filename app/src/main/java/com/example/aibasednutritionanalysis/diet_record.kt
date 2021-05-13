@@ -14,6 +14,8 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
+import com.example.aibasednutritionanalysis.MainActivity.Companion.DiethistoryDB
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -41,6 +43,9 @@ class diet_record : AppCompatActivity() {
         val album: Button = findViewById(R.id.album) //album: 앨범 버튼
         val camera: Button = findViewById(R.id.camera) //camera: 카메라 버튼
         val end = findViewById<Button>(R.id.end) //end: 작성 완료 버튼
+        val photo1:ImageView=findViewById(R.id.photo1)
+        val photo2:ImageView=findViewById(R.id.photo2)
+        val photo3:ImageView=findViewById(R.id.photo3)
 
         //오늘의 날짜를 위쪽에 표시하기
         val cal = Calendar.getInstance()
@@ -50,6 +55,7 @@ class diet_record : AppCompatActivity() {
         Date.setText(year+"년 "+month+"월 "+day+"일")
 
         //스피너(드롭다운) 어댑터와 연결
+        var meal_time:String=""
         val myAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
         spinner.adapter = myAdapter
 
@@ -69,6 +75,7 @@ class diet_record : AppCompatActivity() {
                     else -> {
                     }
                 }
+                meal_time=items[position]
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
 
@@ -90,9 +97,6 @@ class diet_record : AppCompatActivity() {
 
         //작성완료 버튼 선택시
         end.setOnClickListener {
-//            val nextIntent = Intent(this, diet_record::class.java)
-//            startActivity(nextIntent)
-
             //식사시간 선택이 되지 않은 경우
             if(spinner.selectedItem.toString()==items[0]) {
                 Toast.makeText(this, "식사시간을 선택해주세요", Toast.LENGTH_LONG).show()
@@ -101,12 +105,19 @@ class diet_record : AppCompatActivity() {
                 //본문이 비어있는 경우
                 if(textbox.text.isNullOrEmpty()){
                     Toast.makeText(this, "식단기록을 작성해주세요", Toast.LENGTH_LONG).show()
+                } else if(photo1.drawable.toBitmap()==null){
+                    Toast.makeText(this, "사진을 등록해주세요", Toast.LENGTH_LONG).show()
                 }
                 //식사시간 선택과 본문 모두 만족한 경우
                 else {
                     end.isClickable = true
-                    text = textbox.toString()
+                    text = textbox.text.toString()
                     Toast.makeText(this, "저장됨", Toast.LENGTH_LONG).show()
+                    var id=DiethistoryDB.diethistoryDao().getCount()
+                    DiethistoryDB.diethistoryDao().insert(diethistory(id,Date.text.toString(),meal_time,text,photo1.drawable.toBitmap()))
+                    Log.d("diethistory_db",""+id+":  "+Date.text.toString()+"   "+meal_time+"   "+text)
+                    val nextIntent = Intent(this, diet_history::class.java)
+                    startActivity(nextIntent)
                 }
             }
         }

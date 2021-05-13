@@ -2,11 +2,14 @@ package com.example.aibasednutritionanalysis
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toBitmap
+import com.example.aibasednutritionanalysis.MainActivity.Companion.DiethistoryDB
 import com.example.aibasednutritionanalysis.MainActivity.Companion.NutritionDB
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.random.Random
 
 class result: AppCompatActivity() {
@@ -41,6 +44,15 @@ class result: AppCompatActivity() {
                 +"  단백질\n"+"  지방\n" +"  식이섬유\n"+"  나트륨")
         result2.setText(one_time +"g  \n" +energy+"kcal  \n" +carb+"g  \n"+sugar+"g  \n"
                 +protein+"g  \n"+fat+"g  \n"+fiber+"g  \n"+sodium+"mg  ")
+
+        //식단기록 DB에 추가
+        var id= DiethistoryDB.diethistoryDao().getCount()
+        val current_time=Calendar.getInstance().time
+        var dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).format(current_time)
+        var timeFormat=SimpleDateFormat("HH시mm분", Locale.KOREA).format(current_time)
+        var photo=photobox.drawable.toBitmap()
+
+        DiethistoryDB.diethistoryDao().insert(diethistory(id,dateFormat,timeFormat,food_name,photo))
     }
 
     //백버튼 누르면 메뉴화면으로 이동

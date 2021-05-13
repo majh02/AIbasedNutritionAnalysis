@@ -15,4 +15,7 @@ interface nutritionDao {
 
     @Query("SELECT * FROM nutrition WHERE label= :label_num")
     fun getnutrition(label_num: Int):List<nutrition>
+
+    @Query("SELECT COUNT(*) FROM nutrition")
+    fun getCount():Int
 }

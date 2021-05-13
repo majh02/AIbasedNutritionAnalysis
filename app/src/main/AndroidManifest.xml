@@ -39,6 +39,9 @@
         <activity
             android:label="activity_diet_record"
             android:name=".diet_record"></activity>
+        <activity
+            android:label="activity_diet_history"
+            android:name=".diet_history"></activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.aibasednutritionanalysis.fileprovider"

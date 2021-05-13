@@ -107,7 +107,8 @@
         android:background="@drawable/transparent_button"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/birthday"

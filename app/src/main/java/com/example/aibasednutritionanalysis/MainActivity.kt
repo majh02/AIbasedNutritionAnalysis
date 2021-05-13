@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.AssetManager
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,19 +23,21 @@ import java.io.InputStream
 class MainActivity : AppCompatActivity() {
     companion object{
         lateinit var NutritionDB:nutritionDB
+        lateinit var DiethistoryDB:diethistoryDB
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val logo = findViewById<ImageView>(R.id.mainlogo)
-        var count=0
 
-        if(count==0) {
-            //Room DataBase
-            NutritionDB = Room.databaseBuilder(this, nutritionDB::class.java, "db").allowMainThreadQueries().build()
-            NutritionDB.nutritionDao().deleteAll()
+        //Room Database
+        NutritionDB = Room.databaseBuilder(this, nutritionDB::class.java, "nutritiondb").allowMainThreadQueries().build()
+        NutritionDB.nutritionDao().deleteAll()
+        DiethistoryDB = Room.databaseBuilder(this, diethistoryDB::class.java, "diethistorydb").allowMainThreadQueries().build()
 
+        if(NutritionDB.nutritionDao().getCount()==0) {
+            System.out.println("DB 저장!")
             val assetManager: AssetManager = resources.assets
             val inputStream: InputStream = assetManager.open("NutritionDB.txt")
 
@@ -46,7 +49,6 @@ class MainActivity : AppCompatActivity() {
                     NutritionDB?.nutritionDao()?.insert(input)
                 }
             }
-            count++
         }
 
         //prefs(SharedPreferences) -> 회원정보 저장함

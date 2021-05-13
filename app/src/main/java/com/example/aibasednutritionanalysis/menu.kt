@@ -15,7 +15,8 @@ class menu: AppCompatActivity() {
         layout=findViewById(R.id.menu)
         val menu1:Button=findViewById(R.id.menu1)
         val menu2:Button=findViewById(R.id.menu2)
-        val menu3:Button=findViewById(R.id.menu4)
+        val menu3:Button=findViewById(R.id.menu3)
+        val menu4:Button=findViewById(R.id.menu4)
 
         menu1.setOnClickListener{
             val nextIntent1 = Intent(this, takeorselect_photo::class.java)
@@ -26,8 +27,12 @@ class menu: AppCompatActivity() {
             startActivity(nextIntent2)
         }
         menu3.setOnClickListener{
-            val nextIntent3 = Intent(this, register_info::class.java)
+            val nextIntent3 = Intent(this, diet_history::class.java)
             startActivity(nextIntent3)
+        }
+        menu4.setOnClickListener{
+            val nextIntent4 = Intent(this, register_info::class.java)
+            startActivity(nextIntent4)
         }
     }
 
