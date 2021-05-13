@@ -22,8 +22,8 @@ class diet_history_Adapter(val context: Context, val DB:List<diethistory>):BaseA
 //        var photo3=output.photo3
 
         photo.setImageBitmap(photo_bitmap) //리스트뷰에 사진 비트맵 채우기
-        if(output.content.length>25){ //식단 기록 내용이 25자 초과 시, 축약된 형태로 보여줌
-            var reduced_content:String=output.content.substring(25)+"..."
+        if(output.content.length>20){ //식단 기록 내용이 25자 초과 시, 축약된 형태로 보여줌
+            var reduced_content:String=output.content.substring(0,20)+"..."
             content.text=reduced_content
         }
         else content.text=output.content //25자 이내면 그대로 보여줌

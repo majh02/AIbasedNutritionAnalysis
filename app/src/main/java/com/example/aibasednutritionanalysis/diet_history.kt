@@ -18,7 +18,7 @@ class diet_history:AppCompatActivity() {
         val list:ListView=findViewById(R.id.list) //리스트뷰
 
         //식단기록 DB가 빈 상태가 아닐 때 -> 리스트뷰에 원래 저장되어있던 DB 채우기
-        fill_list(list)
+        if(DiethistoryDB.diethistoryDao().getCount()!=0) fill_list(list)
 
         list.onItemLongClickListener=object :AdapterView.OnItemLongClickListener{
             override fun onItemLongClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long): Boolean {
@@ -40,11 +40,9 @@ class diet_history:AppCompatActivity() {
 
     //식단기록 DB가 빈 상태가 아닐 때 -> 리스트뷰에 원래 저장되어있던 DB 채우기
     fun fill_list(list:ListView){
-        if(DiethistoryDB.diethistoryDao().getCount()!=0) {
-            val output = DiethistoryDB.diethistoryDao().getAll()
-            val diet_adpater = diet_history_Adapter(this, output)
-            list.adapter = diet_adpater
-        }
+        val output = DiethistoryDB.diethistoryDao().getAll()
+        val diet_adpater = diet_history_Adapter(this, output)
+        list.adapter = diet_adpater
     }
 
     //백버튼 누르면 메뉴화면으로 이동
