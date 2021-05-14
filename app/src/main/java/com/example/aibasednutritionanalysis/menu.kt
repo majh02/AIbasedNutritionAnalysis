@@ -6,6 +6,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermission
 
 class menu: AppCompatActivity() {
     lateinit var layout:View
@@ -17,6 +20,8 @@ class menu: AppCompatActivity() {
         val menu2:Button=findViewById(R.id.menu2)
         val menu3:Button=findViewById(R.id.menu3)
         val menu4:Button=findViewById(R.id.menu4)
+
+        settingPermission() //카메라 접근권한 허용
 
         menu1.setOnClickListener{
             val nextIntent1 = Intent(this, takeorselect_photo::class.java)
@@ -34,6 +39,28 @@ class menu: AppCompatActivity() {
             val nextIntent4 = Intent(this, register_info::class.java)
             startActivity(nextIntent4)
         }
+    }
+
+    // 카메라 권한 허용
+    fun settingPermission() {
+        var permis = object : PermissionListener {
+            //            어떠한 형식을 상속받는 익명 클래스의 객체를 생성하기 위해 다음과 같이 작성
+            override fun onPermissionGranted() {
+            }
+
+            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                ActivityCompat.finishAffinity(this@menu) // 권한 거부시 앱 종료
+            }
+        }
+
+        TedPermission.with(this)
+                .setPermissionListener(permis)
+                .setRationaleMessage("카메라 사진 권한 필요")
+                .setDeniedMessage("카메라 권한 요청 거부")
+                .setPermissions(
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        android.Manifest.permission.CAMERA)
+                .check()
     }
 
     var mBackWait:Long = 0

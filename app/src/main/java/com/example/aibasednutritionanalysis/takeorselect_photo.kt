@@ -40,7 +40,6 @@ class takeorselect_photo : AppCompatActivity() {
         val take_photo: Button = findViewById(R.id.take_photo)
         val end = findViewById<Button>(R.id.button3)
 
-        settingPermission()
         select_photo.setOnClickListener { openGallery() }
         take_photo.setOnClickListener {
             startCapture()
@@ -60,31 +59,6 @@ class takeorselect_photo : AppCompatActivity() {
                 startActivity(nextIntent)
             }
         }
-    }
-
-    fun settingPermission() {
-        var permis = object : PermissionListener {
-            //            어떠한 형식을 상속받는 익명 클래스의 객체를 생성하기 위해 다음과 같이 작성
-            override fun onPermissionGranted() {
-                Toast.makeText(this@takeorselect_photo, "권한 허가", Toast.LENGTH_SHORT)
-                        .show()
-            }
-
-            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-                Toast.makeText(this@takeorselect_photo, "권한 거부", Toast.LENGTH_SHORT)
-                        .show()
-                ActivityCompat.finishAffinity(this@takeorselect_photo) // 권한 거부시 앱 종료
-            }
-        }
-
-        TedPermission.with(this)
-                .setPermissionListener(permis)
-                .setRationaleMessage("카메라 사진 권한 필요")
-                .setDeniedMessage("카메라 권한 요청 거부")
-                .setPermissions(
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        android.Manifest.permission.CAMERA)
-                .check()
     }
 
     @Throws(IOException::class)

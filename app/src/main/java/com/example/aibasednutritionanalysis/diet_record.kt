@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.ImageDecoder
+import android.graphics.drawable.BitmapDrawable
+import android.media.Image
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +15,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import com.example.aibasednutritionanalysis.MainActivity.Companion.DiethistoryDB
@@ -33,6 +36,7 @@ class diet_record : AppCompatActivity() {
         var text:String=""
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diet_record)
@@ -46,6 +50,11 @@ class diet_record : AppCompatActivity() {
         val photo1:ImageView=findViewById(R.id.photo1) //photo1: 사진 등록 이미지뷰 1번
         val photo2:ImageView=findViewById(R.id.photo2) //photo2: 사진 등록 이미지뷰 2번
         val photo3:ImageView=findViewById(R.id.photo3) //photo3: 사진 등록 이미지뷰 3번
+
+        // 사진이 하나도 등록되지 않았을 때를 위한 비트맵 변형
+        val drawable = getDrawable(R.drawable.camera)
+        val bitmapDrawable = drawable as BitmapDrawable
+        val Camerabitmap = bitmapDrawable.bitmap
 
         //오늘의 날짜를 위쪽에 표시하기
         val cal = Calendar.getInstance()
@@ -105,9 +114,8 @@ class diet_record : AppCompatActivity() {
                 //본문이 비어있는 경우
                 if(textbox.text.isNullOrEmpty()){
                     Toast.makeText(this, "식단기록을 작성해주세요", Toast.LENGTH_LONG).show()
-                }
-                //1번 이미지뷰가 비어있는 경우(= 사진이 하나도 등록되지 않은 경우)
-                else if(photo1.drawable.toBitmap()==null){
+                } else if(photo1.drawable.toBitmap()==Camerabitmap){ //사진이 하나도 등록되지 않은 경우
+                    System.out.println("똑같야!!~~~")
                     Toast.makeText(this, "사진을 등록해주세요", Toast.LENGTH_LONG).show()
                 }
                 //식사시간 선택과 본문 모두 만족한 경우

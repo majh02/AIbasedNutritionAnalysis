@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         DiethistoryDB = Room.databaseBuilder(this, diethistoryDB::class.java, "diethistorydb").allowMainThreadQueries().build()
 
         if(NutritionDB.nutritionDao().getCount()==0) {
-            System.out.println("DB 저장!")
             val assetManager: AssetManager = resources.assets
             val inputStream: InputStream = assetManager.open("NutritionDB.txt")
 
