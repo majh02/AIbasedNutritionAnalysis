@@ -115,7 +115,6 @@ class diet_record : AppCompatActivity() {
                 if(textbox.text.isNullOrEmpty()){
                     Toast.makeText(this, "식단기록을 작성해주세요", Toast.LENGTH_LONG).show()
                 } else if(photo1.drawable.toBitmap()==Camerabitmap){ //사진이 하나도 등록되지 않은 경우
-                    System.out.println("똑같야!!~~~")
                     Toast.makeText(this, "사진을 등록해주세요", Toast.LENGTH_LONG).show()
                 }
                 //식사시간 선택과 본문 모두 만족한 경우
