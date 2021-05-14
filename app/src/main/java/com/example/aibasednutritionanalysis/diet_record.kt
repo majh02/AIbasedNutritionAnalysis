@@ -43,9 +43,9 @@ class diet_record : AppCompatActivity() {
         val album: Button = findViewById(R.id.album) //album: 앨범 버튼
         val camera: Button = findViewById(R.id.camera) //camera: 카메라 버튼
         val end = findViewById<Button>(R.id.end) //end: 작성 완료 버튼
-        val photo1:ImageView=findViewById(R.id.photo1)
-        val photo2:ImageView=findViewById(R.id.photo2)
-        val photo3:ImageView=findViewById(R.id.photo3)
+        val photo1:ImageView=findViewById(R.id.photo1) //photo1: 사진 등록 이미지뷰 1번
+        val photo2:ImageView=findViewById(R.id.photo2) //photo2: 사진 등록 이미지뷰 2번
+        val photo3:ImageView=findViewById(R.id.photo3) //photo3: 사진 등록 이미지뷰 3번
 
         //오늘의 날짜를 위쪽에 표시하기
         val cal = Calendar.getInstance()
@@ -75,7 +75,7 @@ class diet_record : AppCompatActivity() {
                     else -> {
                     }
                 }
-                meal_time=items[position]
+                meal_time=items[position] //meal_time: 식사시간 값 저장
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
 
@@ -105,7 +105,9 @@ class diet_record : AppCompatActivity() {
                 //본문이 비어있는 경우
                 if(textbox.text.isNullOrEmpty()){
                     Toast.makeText(this, "식단기록을 작성해주세요", Toast.LENGTH_LONG).show()
-                } else if(photo1.drawable.toBitmap()==null){
+                }
+                //1번 이미지뷰가 비어있는 경우(= 사진이 하나도 등록되지 않은 경우)
+                else if(photo1.drawable.toBitmap()==null){
                     Toast.makeText(this, "사진을 등록해주세요", Toast.LENGTH_LONG).show()
                 }
                 //식사시간 선택과 본문 모두 만족한 경우
@@ -113,9 +115,12 @@ class diet_record : AppCompatActivity() {
                     end.isClickable = true
                     text = textbox.text.toString()
                     Toast.makeText(this, "저장됨", Toast.LENGTH_LONG).show()
-                    var id=DiethistoryDB.diethistoryDao().getCount()
-                    DiethistoryDB.diethistoryDao().insert(diethistory(id,Date.text.toString(),meal_time,text,photo1.drawable.toBitmap()))
-                    Log.d("diethistory_db",""+id+":  "+Date.text.toString()+"   "+meal_time+"   "+text)
+
+                    // DiethistorDB에 Entity 삽입
+                    var id=DiethistoryDB.diethistoryDao().getCount() //Primary Key
+                    DiethistoryDB.diethistoryDao().insert(diethistory(id,Date.text.toString(),meal_time,text,photo1.drawable.toBitmap())) //INSERT
+
+                    //다음 액티비티(식단 캘린더)로 이동
                     val nextIntent = Intent(this, diet_history::class.java)
                     startActivity(nextIntent)
                 }
