@@ -22,13 +22,15 @@
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.4"
         app:srcCompat="@drawable/result" />
 
     <TextView
         android:id="@+id/result_foodname"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
         android:gravity="center"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -39,11 +41,18 @@
         android:layout_weight="1">
 
         <LinearLayout
-            android:layout_width="400dp"
-            android:layout_height="260dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@drawable/boxline"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
