@@ -28,6 +28,7 @@ class takeorselect_photo : AppCompatActivity() {
     private val OPEN_GALLERY = 1
     private val REQUEST_IMAGE_CAPTURE: Int = 100
     private var currentPhotoPath: String = ""
+    private var return_label = 0
     companion object{
         var bitmap: Bitmap? =null
     }
@@ -56,6 +57,7 @@ class takeorselect_photo : AppCompatActivity() {
             else {
                 end.setBackgroundColor(Color.parseColor("#66CCFF"))
                 val nextIntent = Intent(this, result::class.java)
+                nextIntent.putExtra("데이터베이스로 전달할 라벨 값",return_label)
                 startActivity(nextIntent)
             }
         }

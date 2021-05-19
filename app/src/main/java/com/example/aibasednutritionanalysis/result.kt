@@ -2,8 +2,10 @@ package com.example.aibasednutritionanalysis
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
 import com.example.aibasednutritionanalysis.MainActivity.Companion.DiethistoryDB
@@ -13,6 +15,9 @@ import java.util.*
 import kotlin.random.Random
 
 class result: AppCompatActivity() {
+    companion object{
+        var count:Int=0
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
@@ -22,9 +27,15 @@ class result: AppCompatActivity() {
         val result1:TextView=findViewById(R.id.result1)
         val result2:TextView=findViewById(R.id.result2)
 
-        //임시로 라벨값은 랜덤으로 받도록 설정함->나중에 수정할것
-        val rand =Random
-        var label_num= rand.nextInt(50)
+        var label_num = 0
+
+        if (intent.hasExtra("server_label")) {
+            label_num = intent.getIntExtra("server_label", 0)
+            Log.e("데이터베이스에 전달된 라벨", label_num.toString())
+
+        } else {
+            Toast.makeText(this, "전달된 이름이 없습니다", Toast.LENGTH_SHORT).show()
+        }
 
         //output :라벨값에 해당하는 엔티티
         var output=NutritionDB.nutritionDao().getnutrition(label_num)
